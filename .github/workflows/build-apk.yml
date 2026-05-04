@@ -1,14 +1,21 @@
 name: Build Flutter APK
 on:
   push:
-    branches: [ main ] # Runs every time you push code to the 'main' branch
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    # This line tells GitHub all commands happen inside the flutter_app folder
+    defaults:
+      run:
+        working-directory: flutter_app 
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: . # This ensures it pulls the whole repo structure
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -20,17 +27,16 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          # This automatically downloads the latest stable Flutter SDK in the cloud
 
       - name: Get Dependencies
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --debug 
-        # We use --debug for easy testing. Use --release for production.
+        run: flutter build apk --debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: flutter-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          # We point to the specific path inside the subfolder
+          path: flutter_app/build/app/outputs/flutter-apk/app-debug.apk
