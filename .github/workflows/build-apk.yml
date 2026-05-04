@@ -6,16 +6,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # This line tells GitHub all commands happen inside the flutter_app folder
-    defaults:
-      run:
-        working-directory: flutter_app 
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: . # This ensures it pulls the whole repo structure
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -29,14 +23,18 @@ jobs:
           channel: 'stable'
 
       - name: Get Dependencies
+        # We specify the folder directly here
         run: flutter pub get
+        working-directory: ./flutter_app 
 
       - name: Build APK
+        # And directly here
         run: flutter build apk --debug
+        working-directory: ./flutter_app
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: flutter-apk
-          # We point to the specific path inside the subfolder
+          # Path to the file created inside that folder
           path: flutter_app/build/app/outputs/flutter-apk/app-debug.apk
