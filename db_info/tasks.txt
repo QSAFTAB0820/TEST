@@ -1,0 +1,49 @@
+==================================================
+Task Manager Module - Database Specification
+==================================================
+
+Module: tasks (Task Management)
+
+DB TYPE: B (Individual - tasks created by users)
+
+Table: task
+
+* id (primary key)
+* title (char 200)
+* description (text, nullable)
+* status (char 20) - choices: pending, in_progress, completed
+* priority (char 20) - choices: low, medium, high
+* due_date (datetime, nullable)
+* created_at (datetime)
+* updated_at (datetime)
+* created_by (foreign key -> accounts.User)
+
+Purpose: Store individual user tasks with title, description, status, priority, and due date.
+
+Navigation Flow:
+1. User logs in
+2. User navigates to Tasks tab
+3. User sees list of tasks
+4. User can create new task via FAB
+5. User can view/edit/delete existing tasks
+
+Relationships:
+- created_by: ForeignKey to User (1-M)
+- User.tasks: Reverse relation to Task (M-1)
+
+Features:
+- Pagination (20 items per page)
+- Filter by status
+- Filter by priority
+- Sort by due_date, created_at
+- Search by title
+
+Status Values:
+- pending: Task not started
+- in_progress: Task being worked on
+- completed: Task finished
+
+Priority Values:
+- low: Low priority
+- medium: Medium priority  
+- high: High priority
